@@ -6,28 +6,29 @@
             <nav class="limiter-menu-desktop container">
                 <!-- Logo desktop -->		
                 <a href="/" class="logo">
-                    <img src="{{ asset('website/images/icons/logo-01.png') }}" alt="IMG-LOGO">
+                    <h4 style="color: black;font-weight: bold">
+                        Femme<span style="font-weight: 500;color: grey">Shop</span>
+                    </h4>
                 </a>
                 <!-- Menu desktop -->
                 <div class="menu-desktop">
                     <ul class="main-menu">
-                        @guest
-                            <li class="{{ ($judul ==="Femme Shop")?'active-menu':'' }}">
-                                <a href="/">Home</a>
+                        <li class="{{ ($judul ==="Femme Shop")?'active-menu':'' }}">
+                            <a href="/">Home</a>
+                        </li>
+                        @auth
+                            <li class="{{ ($judul ==="Shop")?'active-menu':'' }}">
+                                <a href="/shop">Shop</a>
                             </li>
-                            <li class="{{ ($judul ==="Blog")?'active-menu':'' }}">
-                                <a href="/blog">Blog</a>
-                            </li>
-                            <li class="{{ ($judul ==="Tentang")?'active-menu':'' }}">
-                                <a href="/tentang">Tentang</a>
-                            </li>
-                            <li class="{{ ($judul ==="Hubungi")?'active-menu':'' }}">
-                                <a href="/hubungi">Hubungi</a>
-                            </li>
-                        @endguest
+                        @endauth
+                        <li class="{{ ($judul ==="Blog")?'active-menu':'' }}">
+                            <a href="/blog">Blog</a>
+                        </li>
+                        <li class="{{ ($judul ==="Hubungi")?'active-menu':'' }}">
+                            <a href="/hubungi">Hubungi</a>
+                        </li>
                     </ul>
                 </div>	
-
                 <!-- Icon header -->
                 <div class="wrap-icon-header flex-w flex-r-m">
                     <ul class="main-menu">
@@ -37,12 +38,14 @@
                             </li>
                         @endguest
                         @can('user')
-                            <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-                                <i class="zmdi zmdi-shopping-cart"></i>
-                            </div>
-                            <a href="#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-                                <i class="zmdi zmdi-favorite-outline"></i>
-                            </a>
+                            @if (strtolower($judul) !=='add cart' && strtolower($judul) !=='proses pesanan')
+                                <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart {{ ($judul ==="Keranjang")?'icon-aktif':'' }}" data-notify="{{ $dataKeranjang->count() }}">
+                                    <i class="zmdi zmdi-shopping-cart"></i>
+                                </div>
+                                <a href="/wishlist/{{ auth()->user()->username }}" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti {{ ($judul ==="Wishlist")?'icon-aktif':'' }}" data-notify="{{ $dataSuka->count() }}">
+                                    <i class="fa fa-heart" aria-hidden="true"></i>
+                                </a>
+                            @endif
                         @endcan
                     </ul>
                     @auth    
@@ -54,8 +57,14 @@
                                     </div>
                                 </a>
                                 <ul class="submenu">
-                                    <li><a href="index.html">Profile</a></li>
-                                    <li><a href="home-02.html">Homepage 2</a></li>
+                                    @can('admin')
+                                        <li><a class="styled-button" href="/admin/dashboard">Dashboard &nbsp;<i class="fa fa-tachometer" aria-hidden="true"></i></a></li>
+                                    @endcan
+                                    @can('user')
+                                        <li><a class="styled-button" href="/profil/{{ auth()->user()->username }}">Profil</a></li>
+                                        <li><a class="styled-button" href="/keranjang/{{ auth()->user()->username }}">Keranjang</a></li>
+                                        <li><a class="styled-button" href="/pesanan/{{ auth()->user()->username }}">Pesanan</a></li>
+                                    @endcan
                                     <li class="divider"></li>
                                     <li>
                                         <form action="/logout" method="POST">
@@ -71,7 +80,6 @@
             </nav>
         </div>	
     </div>
-
     <!-- Header Mobile -->
     <div class="wrap-header-mobile">
         <!-- Logo moblie -->		
@@ -80,63 +88,26 @@
         </div>
         <!-- Icon header -->
         @can('user')
-            <div class="wrap-icon-header flex-w flex-r-m m-r-15">
-                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
-                    <i class="zmdi zmdi-shopping-cart"></i>
+            @if (strtolower($judul) !=='add cart' && strtolower($judul) !=='proses pesanan')
+                <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="{{ $dataKeranjang->count() }}">
+                        <i class="zmdi zmdi-shopping-cart"></i>
+                    </div>
+                    <a href="/wishlist/{{ auth()->user()->username }}" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="{{ $dataSuka->count() }}">
+                        <i class="zmdi zmdi-favorite-outline"></i>
+                    </a>
                 </div>
-
-                <a href="#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
-                    <i class="zmdi zmdi-favorite-outline"></i>
-                </a>
-            </div>
+            @endif
         @endcan
         <!-- Button show menu -->
-        <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
+        <div class="btn-show-menu-mobile hamburger js-show-menu-side">
             <span class="hamburger-box">
                 <span class="hamburger-inner"></span>
             </span>
         </div>
     </div>
-
-
-    <!-- Menu Mobile -->
-    <div class="menu-mobile">
-        <ul class="main-menu-m">
-            @guest
-                <li>
-                    <a href="/">Home</a>
-                </li>
-                <li>
-                    <a href="/blog">Blog</a>
-                </li>
-
-                <li>
-                    <a href="/tentang">Tentang</a>
-                </li>
-
-                <li>
-                    <a href="/hubungi">Hubungi</a>
-                </li>
-                <li>
-                    <a href="/login">Login</a>
-                </li>
-            @endguest
-            @can('user')
-
-            @elsecan('admin')
-            
-            @endcan
-            @auth
-                <li>
-                    <a href="">Profile</a>
-                </li>
-                <li>
-                    <form action="/logout" method="POST">
-                        @csrf
-                        <button type="submit" class="styled-button-m">Log out</button>
-                    </form>
-                </li>
-            @endauth
-        </ul>
-    </div>
 </header>
+@include('partials.modalMenu')
+@if(strtolower($judul) !=='add cart' && strtolower($judul) !=='proses pesanan')
+    @include('partials.modalKeranjang')
+@endif

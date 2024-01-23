@@ -1,52 +1,51 @@
-@extends('users.user.home')
+@extends('users.user.index')
 @section('konten')
-	<!-- Product -->
 	<div class="bg0 m-t-23 p-b-140">
 		<div class="container">
 			@include('partials.headerProduk')
-			<!-- Produk -->
-			<div class="row isotope-grid">
-				@foreach ($produks as $produk)
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
-					<!-- Block2 -->
-					<div class="block2">
-						<div class="block2-pic hov-img0">
-							<a href="/shop/{{ $produk->slug }}">
-								<img src="{{ asset ('website/images/product-01.jpg') }}" alt="IMG-PRODUCT">
-								<button class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-									Quick View
-								</button>
-							</a>
-						</div>
-
-						<div class="block2-txt flex-w flex-t p-t-14">
-							<div class="block2-txt-child1 flex-col-l ">
-								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-									{{ $produk->nama }}
+			<div class="row" id="product-container">
+				@if ($dataProduk->count())
+				@foreach ($dataProduk as $produk)
+					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35">
+						<div class="block2">
+							<div class="block2-pic hov-img0">
+								@if ($produk->image ==="default")
+									<img src="{{ asset('defaultProduk.png') }}" alt="IMG" style="width:345px;height:482px;object-fit:cover">
+								@else
+									<img src="{{ asset('storage/'.$produk->image) }}" alt="IMG" style="width:345px;height:482px;object-fit:cover">
+								@endif
+								<a href="/{{ $produk->slug }}" class="block2-btn flex-c-m stext-103 cl5 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-10">
+									<i class="zmdi zmdi-shopping-cart"></i>
 								</a>
-
-								<span class="stext-105 cl3">
-									Rp. {{ $produk->harga }}
-								</span>
 							</div>
-
-							<div class="block2-txt-child2 flex-r p-t-3">
-								<a href="/produk/{{ $produk->slug }}" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="{{ asset('website/images/icons/icon-heart-01.png') }}" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{{ asset('website/images/icons/icon-heart-02.png') }}" alt="ICON">
-								</a>
+							<div class="block2-txt flex-w flex-t p-t-14">
+								<div class="block2-txt-child1 flex-col-l ">
+									<a href="/shop/{{ $produk->slug }}" class="stext-104 cl4 hov-cl1 trans-04 p-b-6">
+										{{ $produk->nama }}
+									</a>
+									<span class="stext-105 cl3">
+										@if ($produk->diskon !== null)
+										Rp. <span class="strikethrough">
+											{{ number_format($produk->harga, 0, ',', '.') }}
+										</span> &nbsp;<span>{{ number_format($produk->hargaTotal, 0, ',', '.') }}</span>
+										@else
+											Rp. {{ number_format($produk->harga, 0, ',', '.') }}
+										@endif
+									</span>
+								</div>
+								<div class="block2-txt-child2 flex-r p-t-3">
+									
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 				@endforeach
-			</div>
-
-			<!-- Load more -->
-			<div class="flex-c-m flex-w w-full p-t-45">
-				<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-					Load More
-				</a>
+				@else
+					<h4 class="p-t-15 ltext-108 cl2 trans-04 txt-center">
+						Maaf produk tidak tersedia
+					</h4>
+				@endif
+				{{ $dataProduk->links('partials.pagination') }}
 			</div>
 		</div>
 	</div>

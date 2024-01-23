@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('produkwarnas', function (Blueprint $table) {
             $table->id();
             $table->string('nama')->unique();
+            $table->string('slug')->unique();
             $table->timestamps();
 
         });

@@ -11,17 +11,14 @@ class Blog extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $with = ['blogkategori','user'];
-
+    
     public function user(){
         return $this->belongsTo(User::class);
     }
-    
     public function blogkategori()
     {
         return $this->belongsToMany(Blogkategori::class,'blog_blogkategori');
     }
-
     public function scopeFilter($query, array $filters){
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -29,7 +26,6 @@ class Blog extends Model
                     ->orWhere('isi_blog', 'like', '%' . $search . '%');
             });
         });
-    
         $query->when($filters['kategori'] ?? false, function ($query, $kategori) {
             $query->whereHas('blogkategori', function ($query) use ($kategori) {
                 $query->where('slug', $kategori);

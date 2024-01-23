@@ -13,7 +13,11 @@
                     <div class="blog-item">
                         <div class="hov-img0">
                             <a href="/blog/{{ $blog->slug }}">
-                                <img src="{{ asset ('/website/images/blog-01.jpg') }}" alt="IMG-BLOG">
+                                @if ($blog->image ==="default")
+                                    <img src="{{ asset('defaultBlog.png') }}" alt="IMG" style="width:370px;height:258px;object-fit:cover">
+                                @else
+                                    <img src="{{ asset('storage/'.$blog->image) }}" alt="IMG" style="width:370px;height:258px;object-fit:cover">
+                                @endif
                             </a>
                         </div>
 

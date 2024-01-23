@@ -1,0 +1,100 @@
+
+.hover-none:hover {
+    color: rgb(0, 0, 0,0.5);    
+    text-decoration: none;
+}
+.image-blog{
+    width: 150px;
+    height: 90px;
+    object-fit: cover;
+}
+.image-produk{
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+}
+.text-abu{
+    color: rgb(0, 0, 0,0.5);
+    font-weight: 700;
+}
+.custom-file-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: calc(100% - 0px);
+  }
+.stext-110{
+    font-size: 12px;
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+}
+.stext-110-b{
+    font-size: 12px;
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+.stext-111-b{
+    font-size: 16px;
+    color: rgba(155, 151, 151, 0.5);
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+}
+.stext-111-b:hover{
+    color: rgb(114, 114, 114);
+}
+.aktif{
+    color: rgb(114, 114, 114);
+}
+.min150{
+    min-width: 200px;
+}
+.min80{
+    min-width: 80px;
+    max-width: 250px;
+}
+.min300{
+    min-width: 1300px;
+}
+.min400{
+    min-width: 1300px;
+}
+.min80{
+    min-width: 100px;
+}
+
+.profil {
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+.centered-text span{
+    font-size: 12px;
+}
+
+.dataUser{
+    font-weight: bold;
+}
+
+.profil-flex-w {
+    display: flex;
+    align-items: center;
+    height: 100%; 
+}
+.strikethrough {
+    position: relative;
+  }
+  .strikethrough:before {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 50%;
+    right: 0;
+    border-top: 1px solid;
+    border-color: inherit;
+    
+    -webkit-transform:rotate(-5deg);
+    -moz-transform:rotate(-5deg);
+    -ms-transform:rotate(-5deg);
+    -o-transform:rotate(-5deg);
+    transform:rotate(-5deg);
+  }

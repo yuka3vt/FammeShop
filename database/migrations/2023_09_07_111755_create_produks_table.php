@@ -13,16 +13,19 @@ return new class extends Migration
     {
         Schema::create('produks', function (Blueprint $table) {
             $table->id();
+            $table->string('image')->nullable()->default("default");
             $table->string('nama');
             $table->string('slug')->unique();
-            $table->foreignId('produkwarna_id')->nullable();
-            $table->foreignId('produkukuran_id')->nullable();
-            $table->string('berat')->nullable();;
+            $table->double('berat')->nullable();
             $table->string('dimensi')->nullable();
-            $table->string('material')->nullable();
+            $table->string('bahan')->nullable();
             $table->text('deskripsi');
-            $table->double('harga');
+            $table->decimal('harga', 10, 0);
             $table->integer('stok');
+            $table->integer('diskon')->nullable();
+            $table->integer('dibeli')->default(0);
+            $table->integer('suka')->default(0);
+            $table->decimal('hargaTotal', 10, 0);
             $table->timestamps();
         });
     }

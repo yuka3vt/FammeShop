@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('judul');
+            $table->string('image')->nullable()->default("default");
             $table->string('slug')->unique();
             $table->text('kutipan');
             $table->text('isi_blog');

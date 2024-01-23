@@ -9,7 +9,6 @@ class Produkkategori extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-
     public function produk()
     {
         return $this->belongsToMany(Produk::class, 'produk_produkkategori', 'produkkategori_id', 'produk_id');

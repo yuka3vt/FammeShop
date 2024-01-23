@@ -7,12 +7,19 @@
             <div class="col-md-8 col-lg-9 p-b-80">
                 <div class="p-r-45 p-r-0-lg">
                     <!-- item blog -->
-                    @if ($blogs->count())
-                        @foreach ($blogs as $blog)
+                    @if ($dataBlog->count())
+                        @foreach ($dataBlog as $blog)
                             <div class="p-b-63">
                                 <a href="/blog/{{ $blog->slug }}" class="hov-img0 how-pos5-parent">
-                                    <img src="{{ asset ('website/images/blog-04.jpg') }}" alt="IMG-BLOG">
-
+                                    @if ($blog->image==="default")
+                                        <div class="image-container">
+                                            <img src="{{ asset('defaultBlog.png') }}" alt="Gambar" class="custom-image">
+                                        </div>
+                                    @else
+                                        <div class="image-container">
+                                            <img src="{{ asset('storage/'.$blog->image) }}" alt="Gambar" class="custom-image">
+                                        </div>
+                                    @endif
                                     <div class="flex-col-c-m size-123 bg9 how-pos5">
                                         <span class="ltext-107 cl2 txt-center">
                                             {{ \Carbon\Carbon::parse($blog->created_at)->format('d') }}        
@@ -66,13 +73,12 @@
                                 </div>
                             </div>
                         @endforeach
-                        
                     @else
                     <h4 class="p-t-15 ltext-108 cl2 trans-04 txt-center">
                         Maaf blog tidak tersedia
                     </h4>
                     @endif
-                    {{ $blogs->links('partials.pagination') }}
+                    {{ $dataBlog->links('partials.pagination') }}
                 </div>
             </div>
             @include('partials.top3Produk')

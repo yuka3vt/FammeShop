@@ -14,6 +14,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('website/vendor/perfect-scrollbar/perfect-scrollbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('website/css/util.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('website/css/main.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 @endsection
 @section('body')
 <body>
@@ -21,6 +23,19 @@
     @yield('konten')
     @include('partials.footer')
     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleRotation() {
+            var accountDiv = document.getElementById('account');
+            accountDiv.classList.toggle('rotate-90');
+        }
+
+        var accountLink = document.querySelector('.nav-link a');
+        accountLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            toggleRotation();
+        });
+  </script>
     <script src="{{ asset('website/vendor/jquery/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ asset('website/vendor/animsition/js/animsition.min.js') }}"></script>
     <script src="{{ asset('website/vendor/bootstrap/js/popper.js') }}"></script>
@@ -104,5 +119,6 @@
     });
     </script>
     <script src="{{ asset('website/js/main.js') }}"></script>
+    
 </body>    
 @endsection

@@ -1,0 +1,233 @@
+@extends('users.user.index')
+@section('konten')
+<!-- breadcrumb -->
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg m-b-10">
+        <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+            Home
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+        <span class="stext-109 cl4">
+            Profil Saya
+        </span>
+    </div>
+</div>
+
+<section class="bg0">
+    <div class="container py-5">
+        @if (session()->has('error'))
+            <div id="errorAlert" class="alert alert-danger alert-dismissible fade show " role="alert">
+                {{ session('error') }}
+                <button type="button" class="close " data-dismiss="alert" aria-label="Close">
+                    <span class="" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        <div class="row bread-crumb flex-w p-l-25 p-r-15 p-lr-0-lg">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#modalProfil">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        @if ($dataUser->image ==="default")
+                            <img src="{{ asset('defaultUser.png') }}" alt="{{ $dataUser->username }}" class="rounded-circle img-fluid" style="width: 150px;height: 150px;object-fit: cover">
+                        @else
+                            <img src="{{ asset('storage/'.$dataUser->image) }}" alt="{{ $dataUser->username }}" class="rounded-circle img-fluid" style="width: 150px;height: 150px;object-fit: cover">
+                        @endif
+                        <h5 class="my-3 text-20">{{ $dataUser->username }}</h5>
+                        <p class="text-muted mb-1 text-14">{{ $dataUser->telepon }}</p>
+                        <p class="text-muted mb-4 text-14">{{ $dataUser->email }}</p>
+                        <div class="d-flex justify-content-center mb-2"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0 text-14-bold">Nama</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0 text-14">{{ $dataUser->nama }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0 text-14-bold">Gender</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0 text-14">{{ $dataUser->jenis_kelamin }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0 text-14-bold">Tempat Lahir</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0 text-14">{{ $dataUser->tempat_lahir }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0 text-14-bold">Tanggal Lahir</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0 text-14">{{ $dataUser->created_at_formatted }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0 text-14-bold">Alamat</p>
+                            </div>
+                            <div class="col-sm-8">
+                                @if ($dataUser->provinsi && $dataUser->kota && $dataUser->kecamatan &&
+                                $dataUser->kode_pos && $dataUser->detail_alamat)
+                                <p class="text-muted mb-0 text-14">{{ $dataUser->provinsi }}, {{ $dataUser->kota }},
+                                    {{ $dataUser->kecamatan }}, {{ $dataUser->kode_pos }},
+                                    {{ $dataUser->detail_alamat }}</p>
+                                @else
+                                <p class="text-muted mb-0 text-14">-</p>
+                                @endif
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#modalAlamat"><i
+                                        class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="modalAlamat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="font" id="exampleModalLabel">Alamat</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <H4><i class="fa fa-times" aria-hidden="true"></i></H4>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/profil/{{ auth()->user()->username }}/update-alamat" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="provinsi" class="col-form-label font">Provinsi</label>
+                        <input name="provinsi" type="text" class="form-control font" id="provinsi" required
+                            placeholder="Provinsi" value="{{ $dataUser->provinsi }}">
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-5 mb-3">
+                            <label for="validationDefault03 font">Kota</label>
+                            <input name="kota" type="text" class="form-control font" id="validationDefault03"
+                                placeholder="Kota" value="{{ $dataUser->kota }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="validationDefault04 font">Kecamatan</label>
+                            <input name="kecamatan" type="text" class="form-control font" id="validationDefault04"
+                                placeholder="Kecamatan" value="{{ $dataUser->kecamatan }}" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="validationDefault05 font">Kode Pos</label>
+                            <input name="kode_pos" type="text" class="form-control font" id="validationDefault05"
+                                placeholder="Kode Pos" required value="{{ $dataUser->kode_pos }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label font">Detail Lainnya</label>
+                        <textarea name="detail_alamat" class="form-control" id="message-text"
+                            required>{{ $dataUser->detail_alamat }}</textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary font">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalProfil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="font" id="exampleModalLabel">Profil</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <H4><i class="fa fa-times" aria-hidden="true"></i></H4>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/profil/{{ auth()->user()->username }}/update-profil" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-row">
+                        <div class="col-md-8 mb-3">
+                            <label for="username" class="col-form-label font">Username</label>
+                            <input name="username" type="text" class="form-control font" id="username" required
+                                placeholder="Username" value="{{ $dataUser->username }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-10 mb-3">
+                            <label for="foto" class="col-form-label font">Foto profil</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input font" name="image" id="customFileLangHTML" onchange="updateFileName(this)">
+                                <label class="custom-file-label font" for="customFileLangHTML" data-browse="Choose">Choose file...</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-8 mb-3">
+                            <label for="nama" class="col-form-label font">Nama</label>
+                            <input name="nama" type="text" class="form-control font" id="nama" required
+                                placeholder="Nama" value="{{ $dataUser->nama }}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputgender" class="font col-form-label">Gender</label>
+                            <select id="inputgender" class="form-control" name="jenis_kelamin">
+                                <option value="" disabled>Pilih gender</option>
+                                <option value="Laki-Laki" {{ ($dataUser->jenis_kelamin ==="Laki-Laki")?'selected':'' }}>
+                                    Laki-Laki</option>
+                                <option value="Perempuan" {{ ($dataUser->jenis_kelamin ==="Perempuan")?'selected':'' }}>
+                                    Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12 mb-3">
+                            <label for="telepon" class="col-form-label font">Telepon</label>
+                            <input name="telepon" type="text" class="form-control font" id="telepon" required
+                                placeholder="Telepon" value="{{ $dataUser->telepon }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6 mb-3">
+                            <label for="validationDefault03 font">Tempat lahir</label>
+                            <input name="tempat_lahir" type="text" class="form-control font" id="validationDefault03"
+                                placeholder="Tempat Lahir" value="{{ $dataUser->tempat_lahir }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="validationDefault03 font">Tanggal lahir</label>
+                            <input name="tanggal_lahir" type="date" class="form-control font" id="validationDefault03"
+                                value="{{ $dataUser->tanggal_lahir }}" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary font">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

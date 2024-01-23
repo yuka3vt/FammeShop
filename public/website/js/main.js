@@ -188,10 +188,6 @@
             $('.panel-filter').slideUp(400);
         }    
     });
-
-
-
-
     /*==================================================================
     [ Cart ]*/
     $('.js-show-cart').on('click',function(){
@@ -200,6 +196,15 @@
 
     $('.js-hide-cart').on('click',function(){
         $('.js-panel-cart').removeClass('show-header-cart');
+    });
+
+
+    $('.js-show-menu-side').on('click',function(){
+        $('.js-panel-menu-side').addClass('show-header-cart');
+    });
+
+    $('.js-hide-menu-side').on('click',function(){
+        $('.js-panel-menu-side').removeClass('show-header-cart');
     });
 
     /*==================================================================
@@ -214,18 +219,169 @@
 
     /*==================================================================
     [ +/- num product ]*/
-    $('.btn-num-product-down').on('click', function(){
-        var numProduct = Number($(this).next().val());
-        if(numProduct > 0) $(this).next().val(numProduct - 1);
+    function displaySelectedImage(event, elementId) {
+        const selectedImage = document.getElementById(elementId);
+        const fileInput = event.target;
+    
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+    
+            reader.onload = function(e) {
+                selectedImage.src = e.target.result;
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+    function toggleSubMenu(event) {
+        event.preventDefault();
+        
+        var submenu = this.nextElementSibling;
+        
+        if (submenu.style.display === 'block') {
+        submenu.style.display = 'none';
+        } else {
+        submenu.style.display = 'block';
+        }
+    }
+    var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    for (var i = 0; i < dropdownToggles.length; i++) {
+        dropdownToggles[i].addEventListener('click', toggleSubMenu);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        $('.btn-num-product-down').on('click', function(){
+            var numProductInput = $(this).next(); // Mengambil elemen input terkait
+            var numProduct = Number(numProductInput.val());
+            if (numProduct > 1) {
+                numProductInput.val(numProduct - 1);
+                checkAndUpdateButton()
+            }
+        });
+        
+        $('.btn-num-product-up').on('click', function(){
+            var numProductInput = $(this).prev(); // Mengambil elemen input terkait
+            var numProduct = Number(numProductInput.val());
+            numProductInput.val(numProduct + 1);
+            checkAndUpdateButton()
+        });
+    
+        $('.num-product').on('input', function() {
+            checkAndUpdateButton();
+        });
+    
+        function checkAndUpdateButton() {
+            var updateButton = $('#update-button');
+    
+            var changed = false;
+            $('.num-product').each(function() {
+                var numProductInput = $(this);
+                var numProduct = Number(numProductInput.val());
+                var originalValue = Number(numProductInput.data('original-value'));
+                
+                if (numProduct !== originalValue) {
+                    changed = true;
+                    return false; // Keluar dari loop jika ada perubahan
+                }
+            });
+    
+            if (changed) {
+                updateButton.removeAttr("disabled");
+                updateButton.removeClass("disabled-button");
+            } else {
+                updateButton.attr("disabled", "disabled");
+                updateButton.addClass("disabled-button");
+            }
+        }
     });
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkboxes = document.querySelectorAll('.item-ceklist');
+        const hapusButton = document.getElementById('hapus-button');
+        const ceklistSemua = document.getElementById('ceklist-semua');
 
-    $('.btn-num-product-up').on('click', function(){
-        var numProduct = Number($(this).prev().val());
-        $(this).prev().val(numProduct + 1);
+        ceklistSemua.addEventListener('change', function() {
+            toggleHapusButton();
+        });
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                checkIfAnyCheckboxChecked();
+            });
+        });
+    
+        function checkIfAnyCheckboxChecked() {
+            let anyCheckboxChecked = false;
+    
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    anyCheckboxChecked = true;
+                    return;
+                }
+            });
+    
+            if (anyCheckboxChecked) {
+                hapusButton.classList.remove('disabled-button');
+                hapusButton.removeAttribute('disabled');
+            } else {
+                hapusButton.classList.add('disabled-button');
+                hapusButton.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        function toggleHapusButton() {
+            if (ceklistSemua.checked) {
+                hapusButton.classList.remove('disabled-button');
+                hapusButton.removeAttribute('disabled');
+            } else {
+                hapusButton.classList.add('disabled-button');
+                hapusButton.setAttribute('disabled', 'disabled');
+            }
+        }
     });
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkboxes = document.querySelectorAll('.item-ceklist');
+        const ceklistSemua = document.getElementById('ceklist-semua');
+        const updateButton = document.getElementById('cekout-button');
 
+        ceklistSemua.addEventListener('change', function() {
+            toggleCekOutButton();
+        });
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                checkIfAnyCheckboxChecked();
+            });
+        });
+    
+        function checkIfAnyCheckboxChecked() {
+            let anyCheckboxChecked = false;
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    anyCheckboxChecked = true;
+                    return;
+                }
+            });
+    
+            if (anyCheckboxChecked) {
+                updateButton.classList.remove('disabled-button');
+                updateButton.removeAttribute('disabled');
+            } else {
+                updateButton.classList.add('disabled-button');
+                updateButton.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        function toggleCekOutButton() {
+            if (ceklistSemua.checked) {
+                updateButton.classList.remove('disabled-button');
+                updateButton.removeAttribute('disabled');
+            } else {
+                updateButton.classList.add('disabled-button');
+                updateButton.setAttribute('disabled', 'disabled');
+            }
+        }
+    });
     /*==================================================================
     [ Rating ]*/
+    
     $('.wrap-rating').each(function(){
         var item = $(this).find('.item-rating');
         var rated = -1;
@@ -271,12 +427,14 @@
     $('.js-show-modal1').on('click',function(e){
         e.preventDefault();
         $('.js-modal1').addClass('show-modal1');
+        toggleCekOutButton();
+        toggleHapusButton();
     });
 
     $('.js-hide-modal1').on('click',function(){
         $('.js-modal1').removeClass('show-modal1');
+        window.history.back();
+        toggleCekOutButton();
+        toggleHapusButton();
     });
-
-
-
 })(jQuery);

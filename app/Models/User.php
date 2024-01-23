@@ -14,13 +14,20 @@ class User extends Authenticatable
 
     protected $guarded = ['id'];
 
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+    public function keranjang()
+    {
+        return $this->hasMany(Keranjang::class);
+    }
 }

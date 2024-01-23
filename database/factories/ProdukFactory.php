@@ -16,16 +16,14 @@ class ProdukFactory extends Factory
      */
     public function definition(): array
     {
+        $harga = 87000;
         return [
-            
-
             'nama' => $this->faker->sentence(mt_rand(2,8)),
             'slug' => $this->faker->slug(),
             'deskripsi' => $this->faker->paragraph(mt_rand(5,10)),
-            'harga' => 87000,
+            'harga' => $harga,
             'stok' => 87,
-            'produkwarna_id' => 1,
-            'produkukuran_id' => 1,
+            'hargaTotal' => $harga,
         ];
     }
 }
