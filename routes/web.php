@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\BlogAdminController;
@@ -12,8 +13,6 @@ use App\Http\Controllers\ProdukAdminController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
-use App\Mail\RegisterEmail;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('', [BaseController::class, 'index']);
@@ -26,10 +25,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'Autentikasi']);
     Route::get('/register', [AuthController::class, 'register']);
     Route::get('/register/otp', [AuthController::class, 'otpView']);
+    Route::get('/lupa-password', [AuthController::class, 'lupaPassword']);
+    Route::post('/lupa-password', [ResetPasswordController::class, 'sendResetToken']);
+    Route::get('/reset-password', [ResetPasswordController::class, 'index']);
+    Route::post('/reset-password', [ResetPasswordController::class, 'updatePassword']);
     Route::post('/register/otp', [AuthController::class, 'cekOtp']);
     Route::post('/register', [AuthController::class, 'RegisterStore']);
     Route::get('/kirim-otp/{verificationcode}', [AuthController::class, 'kirim_ulang_otp'])->where('verificationcode', '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}');
 });
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/cek-bukti-bayar/{pesanan:no_pesanan}', [AdminController::class, 'cekBuktiBayar']);
     Route::get('/admin/dashboard', [AdminController::class, 'index']);
@@ -49,6 +53,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/blog-kategori-edit/{blogkategori:slug}', [BlogAdminController::class, 'editKategori']);
     Route::post('/admin/blog-kategori-hapus', [BlogAdminController::class, 'hapusKategori']);
     Route::get('/admin/produk-view', [ProdukAdminController::class, 'indexProduk']);
+    Route::get('/admin/storage-link', [ProdukAdminController::class, 'linkStorage']);
     Route::get('/admin/produk-tambah', [ProdukAdminController::class, 'tambahViewproduk']);
     Route::post('/admin/produk-tambah', [ProdukAdminController::class, 'tambahproduk']);
     Route::get('/admin/produk-edit/{produk:slug}', [ProdukAdminController::class, 'editViewProduk']);
@@ -94,8 +99,8 @@ Route::middleware(['auth', 'user'])->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::post('/logout',[AuthController::class,'logout']);
-    Route::get('/shop', [ProdukController::class, 'index']);
     Route::get('/shop/{produk:slug}', [ProdukController::class, 'show']);
+    Route::get('/shop', [ProdukController::class, 'index']);
     Route::get('/{produk:slug}', [KeranjangController::class, 'keranjangModal']);
     Route::post('/batalkan-pesanan/{pesanan:no_pesanan}', [PesananController::class, 'batalkanPesanan']);
     Route::post('/selesaikan-pesanan/{pesanan:no_pesanan}', [PesananController::class, 'selesaiPesanan']);

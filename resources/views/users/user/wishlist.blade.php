@@ -42,12 +42,12 @@
 									</a>
 
 									<span class="stext-105 cl3">
-										@if ($item->diskon !== 0)
+										@if ($item->produk->diskon !== null)
 										Rp. <span class="strikethrough">
-											{{ number_format($item->harga, 0, ',', '.') }}
+											{{ number_format($item->produk->harga, 0, ',', '.') }}
 										</span> &nbsp;<span>{{ number_format($item->hargaTotal, 0, ',', '.') }}</span>
 										@else
-											Rp. {{ number_format($item->harga, 0, ',', '.') }}
+											Rp. {{ number_format($item->produk->harga, 0, ',', '.') }}
 										@endif
 									</span>
 								</div>

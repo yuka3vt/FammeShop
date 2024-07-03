@@ -2,26 +2,16 @@
 @section('konten')
 <div class="limiter">
     <div class="container-login100">
-        <div class="wrap-login100" >
-            @if (session()->has('berhasil'))
-                <div class="floating-notification">
-                    {{ session('berhasil')}}
-                </div>
-            @endif
-            @if (session()->has('gagalLogin'))
-                <div class="floating-notification bg-danger">
-                    {{ session('gagalLogin') }}
-                </div>
-            @endif            
-            <form class="login100-form validate-form" action="/login" method="POST">
+        <div class="wrap-login100">
+            <form class="login100-form validate-form" action="/reset-password" method="POST">
                 @csrf
                 <span class="login100-form-title p-b-26">
-                    Sign In
+                    Update Password
                 </span>
                 <span class="login100-form-title p-b-48">
                 </span>
                 <div class="wrap-input100 validate-input" data-validate="Email perlu di Isi" style="margin-bottom: 0;">
-                    <input autofocus class="input100" type="email" name="email" data-validate = "email" placeholder="Email" value="{{ old('email') }}">
+                    <input class="input100" type="text" name="email" data-validate="email" placeholder="Email" value="{{ $email }}" readonly>
                 </div>
                 <p style="margin-top: 0px" class="small text-danger">&nbsp; @error('email'){{ $message }}@enderror</p>
                 <div class="wrap-input100 validate-input" data-validate="Password perlu di Isi" style="margin-bottom: 0;">
@@ -31,25 +21,29 @@
                     <input class="input100" type="password" name="password" placeholder="Password">
                 </div>
                 <p style="margin-top: 0px" class="small text-danger">&nbsp;@error('password'){{ $message }}@enderror</p>
-                <div class="text-right">
-                    <a class="txt2" href="/lupa-password">
-                        Lupa Password
-                    </a>
+                <div class="wrap-input100 validate-input" data-validate="Password perlu di Isi" style="margin-bottom: 0;">
+                    <span class="btn-show-pass">
+                        <i class="zmdi zmdi-eye"></i>
+                    </span>
+                    <input class="input100" type="password" name="password_confirmation" placeholder="Ulangi Password">
                 </div>
-                <div class="container-login100-form-btn">
+                <p style="margin-top: 0px" class="small text-danger">&nbsp;@error('password'){{ $message }}@enderror</p>
+                <input type="hidden" name="email" value="{{ $email }}">
+                <input type="hidden" name="token" value="{{ $token }}">
+                <div class="container-login100-form-btn m-t-40">
                     <div class="wrap-login100-form-btn">
                         <div class="login100-form-bgbtn"></div>
                         <button class="login100-form-btn" type="submit">
-                            Sign In
+                            Update Password
                         </button>
                     </div>
-                </div>               
-                <div class="text-center p-t-110">
+                </div>
+                <div class="text-center">
                     <span class="txt1">
-                        Belum punya akun?
+                        Berubah pikiran?
                     </span>
-                    <a class="txt2" href="/register">
-                        Daftar
+                    <a class="txt2" href="/login">
+                        Login
                     </a>
                 </div>
             </form>

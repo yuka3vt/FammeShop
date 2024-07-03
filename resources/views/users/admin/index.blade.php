@@ -56,7 +56,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span> Copyright &copy;<script>document.write(new Date().getFullYear());</script> Femmeshop</span>
                     </div>
                 </div>
             </footer>
@@ -91,9 +91,7 @@
     <script src="{{ asset('admin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('admin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('admin/js/sb-admin-2.min.js') }}"></script>
-    <script src="{{ asset('admin/vendor/chart.js/Chart.min.js') }}"></script>
-    <script src="{{ asset('admin/js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('admin/js/demo/chart-pie-demo.js') }}"></script>
+
 
     <!-- Page level plugins -->
     <script src="{{ asset('admin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
@@ -191,6 +189,46 @@
                 var label = input.parentElement.querySelector('.custom-file-label');
                 label.textContent = fileName;
             }
-        </script>
+    </script>
+<script type="text/javascript">
+    var toHtml = (tag, value) => {
+        $(tag).html(value);
+    }
+
+    $('#provinsi').on('change', function () {
+        var id = $('#provinsi').val();
+        var url = window.location.href;
+        var urlNya = url.substring(0, url.lastIndexOf('/user'));
+
+        $.ajax({
+            type: 'GET',
+            url: urlNya + '/api/get-kota/' + id,
+            dataType: 'json',
+            success: function (data) {
+                var op = '';
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        op += `<option value="${data[i].city_id}">${data[i].city_name}</option>`;
+                    }
+                }
+                toHtml('#kota', op);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        })
+    })
+
+    $(document).ready(function () {
+        $('#provinsi').val("{{ old('provinsi', Auth::user()->provinsi) }}");
+        $('#provinsi').trigger('change');
+
+        setTimeout(function () {
+            $('#kota').val("{{ old('kota', Auth::user()->kota) }}");
+        }, 1500);
+    });
+</script>
+
+
 </body>
 @endsection

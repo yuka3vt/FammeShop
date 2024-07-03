@@ -27,7 +27,7 @@
                             <span>Stok : {{ $dataProduk->stok }}</span>
 						</p>
 						<span class="mtext-106 cl2">
-							@if ($dataProduk->diskon !== 0)
+							@if ($dataProduk->diskon !== null)
 							Rp. <span class="strikethrough">
 								{{ number_format($dataProduk->harga, 0, ',', '.') }}
 							</span> &nbsp;<span>{{ number_format($dataProduk->hargaTotal, 0, ',', '.') }}</span>

@@ -77,14 +77,7 @@
                                 <p class="mb-0 text-14-bold">Alamat</p>
                             </div>
                             <div class="col-sm-8">
-                                @if ($dataUser->provinsi && $dataUser->kota && $dataUser->kecamatan &&
-                                $dataUser->kode_pos && $dataUser->detail_alamat)
-                                <p class="text-muted mb-0 text-14">{{ $dataUser->provinsi }}, {{ $dataUser->kota }},
-                                    {{ $dataUser->kecamatan }}, {{ $dataUser->kode_pos }},
-                                    {{ $dataUser->detail_alamat }}</p>
-                                @else
-                                <p class="text-muted mb-0 text-14">-</p>
-                                @endif
+                                <p class="text-muted mb-0 text-14">{{ $alamat }}</p>
                             </div>
                             <div class="col-sm-1">
                                 <a class="btn" data-toggle="modal" data-target="#modalAlamat"><i
@@ -110,16 +103,21 @@
             <div class="modal-body">
                 <form action="/profil/{{ auth()->user()->username }}/update-alamat" method="POST">
                     @csrf
-                    <div class="mb-3">
-                        <label for="provinsi" class="col-form-label font">Provinsi</label>
-                        <input name="provinsi" type="text" class="form-control font" id="provinsi" required
-                            placeholder="Provinsi" value="{{ $dataUser->provinsi }}">
+                    <div class="form-group font">
+                        <label for="exampleFormControlSelect1">Provinsi</label>
+                        <select class="form-control" id="provinsi" name="provinsi">
+                            <option value="" disabled selected>Pilih Provinsi</option>
+                            @foreach ($provinsi as $item)
+                                <option value="{{ $item['province_id'] }}">{{ $item['province'] }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-row">
                         <div class="col-md-5 mb-3">
-                            <label for="validationDefault03 font">Kota</label>
-                            <input name="kota" type="text" class="form-control font" id="validationDefault03"
-                                placeholder="Kota" value="{{ $dataUser->kota }}" required>
+                            <div class="form-group font">
+                                <label for="exampleFormControlSelect1">Kota</label>
+                                <select class="form-control" id="kota" name="kota"></select>
+                            </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="validationDefault04 font">Kecamatan</label>

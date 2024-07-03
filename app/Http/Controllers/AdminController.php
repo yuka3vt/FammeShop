@@ -8,6 +8,7 @@ use App\Models\Pesanan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Kavist\RajaOngkir\Facades\RajaOngkir;
 
 class AdminController extends Controller
 {
@@ -41,12 +42,22 @@ class AdminController extends Controller
     }
     public function profil()
     {
+        $daftarProvinsi = RajaOngkir::provinsi()->all();
         $dataUser = User::where('id', auth()->user()->id)->first();
         $dataUser->created_at_formatted = Carbon::parse($dataUser->tanggal_lahir)->format('d-m-Y');
+        if ($dataUser->provinsi && $dataUser->kota) {
+            $dataAlamat = RajaOngkir::kota()->dariProvinsi($dataUser->provinsi)->find($dataUser->kota);
+            $alamat = $dataAlamat['province'].', '.$dataAlamat['city_name'].', '. $dataUser->kecamatan .'('.$dataUser->kode_pos.') ,'.$dataUser->detail_alamat;
+        } else {
+            $alamat = '-';
+        }
+        
         return view('users.admin.profil', [
             'judul' => 'Profil',
             'h1' => 'Data Saya',
-            'dataUser' => $dataUser
+            'dataUser' => $dataUser,
+            'provinsi' => $daftarProvinsi,
+            'alamat' => $alamat
         ]);
     }
     public function hapusUser(User $user)

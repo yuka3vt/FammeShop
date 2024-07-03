@@ -26,7 +26,7 @@
 								{{ $produks->nama }}
 							</h4>
 							<span class="mtext-106 cl2">
-								@if ($produks->diskon !== 0)
+								@if ($produks->diskon !== null)
 								Rp. <span class="strikethrough">
 									{{ number_format($produks->harga, 0, ',', '.') }}
 								</span> &nbsp;<span>{{ number_format($produks->hargaTotal, 0, ',', '.') }}</span>

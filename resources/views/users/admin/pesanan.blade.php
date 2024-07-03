@@ -9,7 +9,7 @@
             $status = strtolower(request()->query('status'));
             @endphp
             <div class="col-md-12 d-flex justify-content-center">
-                <a href="/admin/pesanan" class="stext-111-b {{ $status === 'bayar' ? 'aktif' : '' }}">Pesanan</a>
+                <a href="/admin/pesanan" class="stext-111-b {{ $status === 'bayar' ? 'aktif' : '' }}">Bayar</a>
             </div>
             <div class="col-md-12 d-flex justify-content-center">
                 <a href="/admin/pesanan?status=dikemas"
@@ -38,6 +38,7 @@
                         <th class="stext-110-b">Username</th>
                         <th class="min150 stext-110-b">Pesanan</th>
                         <th class="min80 stext-110-b">Alamat</th>
+                        <th class="stext-110-b">Kurir</th>
                         <th class="stext-110-b">Metode</th>
                         <th class="stext-110-b">Total</th>
                         <th class="stext-110-b">Status</th>
@@ -65,12 +66,41 @@
                             </div>
                             @endforeach
                         </td>
+                       
                         <td class="min80">
                             <p class="stext-110 mb-0">{{ $item->user->nama }}</p>
                             <p class="stext-110 mb-1">{{ $item->user->telepon }}</p>
                             <p class="stext-110">{{ $item->alamat }}</p>
                         </td>
-                        <td class="stext-110-b">{{ $item->pembayaran }}</td>
+                        <td class="stext-110">{{ $item->kurir }} - {{ $item->layanan }} (Rp.{{number_format($item->pengiriman, 0, ',', '.')}})</td>
+                        <td class="stext-110-b">
+                            {{ $item->pembayaran }}
+                            @if ( $item->pembayaran!=="COD" && $status!=='bayar')
+                                <label for="imagePreview" id="imagePreviewLabel">
+                                    <img id="imagePreview" src="{{ asset('storage/'.$item->image) }}"
+                                        alt="IMG" style="width:70px;height:70px;object-fit:cover" data-toggle="modal" data-target="#bukti{{ $item->no_pesanan }}">
+                                </label>
+                                <div class="modal fade" id="bukti{{ $item->no_pesanan }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Bukti Pembayaran</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="imagePreview" class="d-flex justify-content-center" id="imagePreviewLabel">
+                                                    <img id="imagePreview" src="{{ asset('storage/'.$item->image) }}"
+                                                        alt="IMG" style="width:300px;height:400px;object-fit:cover">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </td>
                         <td class="stext-110-b">Rp.{{ number_format($item->subtotal, 0, ',', '.')}}</td>
                         <td class="stext-110-b">
                             @if ($status!=='bayar')
@@ -81,7 +111,7 @@
                         </td>
                         @if ($item->keranjang[0]->status==='bayar')
                         <td>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#cekbayar{{ $item->no_pesanan }}">Cek</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#cekbayar{{ $item->no_pesanan }}">Bukti</button>
                         </td>
                         <div class="modal fade" id="cekbayar{{ $item->no_pesanan }}" tabindex="-1" role="dialog"
                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -96,9 +126,9 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <label for="imagePreview" id="imagePreviewLabel">
+                                            <label for="imagePreview" class="d-flex justify-content-center" id="imagePreviewLabel">
                                                 <img id="imagePreview" src="{{ asset('storage/'.$item->image) }}"
-                                                    alt="IMG" style="width:300px;height:300px;object-fit:cover">
+                                                    alt="IMG" style="width:300px;height:400px;object-fit:cover">
                                             </label>
                                         </div>
                                         <div class="modal-footer">

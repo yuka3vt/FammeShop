@@ -20,6 +20,10 @@ return [
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
         'scheme' => 'https',
     ],
+    
+    'rajaongkir' => [
+        'api_key' => env('RAJAONGKIR_API_KEY'),
+    ],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

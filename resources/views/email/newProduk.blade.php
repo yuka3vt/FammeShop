@@ -7,7 +7,6 @@
         </div>
         <span></span>
         <p>Kami memiliki produk baru nih buat kamu</p>
-        <img src="cid:nama_file_gambar.png" alt="Produk">
-        <p>{{ $namaProduk }}</p>
+        <p>{{ $namaProduk }} tersedia hanya Rp.{{ number_format($harga, 0, ',', '.')}} buat kamu</p>
     </div>
 @endsection

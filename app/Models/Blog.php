@@ -19,17 +19,26 @@ class Blog extends Model
     {
         return $this->belongsToMany(Blogkategori::class,'blog_blogkategori');
     }
-    public function scopeFilter($query, array $filters){
+    public function scopeFilter($query, array $filters)
+    {
         $query->when($filters['search'] ?? false, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('judul', 'like', '%' . $search . '%')
-                    ->orWhere('isi_blog', 'like', '%' . $search . '%');
+                $keywords = explode(' ', $search);
+                foreach ($keywords as $keyword) {
+                    $query->orWhere('judul', 'like', '%' . $keyword . '%')
+                        ->orWhere('isi_blog', 'like', '%' . $keyword . '%');
+                }
             });
         });
+
         $query->when($filters['kategori'] ?? false, function ($query, $kategori) {
             $query->whereHas('blogkategori', function ($query) use ($kategori) {
                 $query->where('slug', $kategori);
             });
         });
+    }
+    public function searchableColumns()
+    {
+        return ['judul','isi_blog'];
     }
 }

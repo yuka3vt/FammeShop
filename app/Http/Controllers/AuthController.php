@@ -31,16 +31,18 @@ class AuthController extends Controller
         }
         else{
             $data['level'] = "admin";
-            $data['nama'] = "Femme Shop";
-            $data['jenis_kelamin'] = "Perempuan";
+            $data['akun'] = "aktif";
+            $data['nama'] = "Admin";
+            $data['jenis_kelamin'] = "Laki-Laki";
             $data['tempat_lahir'] = "Sanggau Ledo";
             $data['tanggal_lahir'] = "2021-03-21";
-            $data['username'] = 'femmeshop';
-            $data['telepon'] = "";
-            $data['email'] = "femmeshop13@gmail.com";
+            $data['username'] = 'onlyone';
+            $data['telepon'] = "085752056623";
+            $data['email'] = "admin@gmail.com";
             $data['password'] = "12345678";
             $data['password'] = bcrypt($data['password']);
             User::create($data);
+            
             return redirect('/login');
         }
     }
@@ -52,9 +54,13 @@ class AuthController extends Controller
         $datas['akun'] = 'aktif';
         if (Auth::attempt($datas)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            if (auth()->user()->level === 'admin') {
+                return redirect()->intended('/admin/dashboard');
+            }else{
+                return redirect()->intended('/');
+            }
         }
-        return back()->with('gagalLogin', 'Username atau Password anda salah!');
+        return back()->with('gagalLogin', 'Email atau Password anda salah!');
     }
     public function register()
     {
@@ -188,5 +194,11 @@ class AuthController extends Controller
     public function generateOTP(){
         $otp = rand(1000, 9999);
         return $otp;
+    }
+
+    public function lupaPassword(){
+        return view('otentikasi.lupaPassword', [
+            'judul' => 'Lupa Paassword',
+        ]);
     }
 }

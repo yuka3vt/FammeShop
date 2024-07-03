@@ -52,23 +52,23 @@
     <script src="{{ asset('website/js/slick-custom.js') }}"></script>
     <script src="{{ asset('website/vendor/parallax100/parallax100.js') }}"></script>
     <script>
-    $('.parallax100').parallax100();
+        $('.parallax100').parallax100();
     </script>
     <script src="{{ asset('website/vendor/MagnificPopup/jquery.magnific-popup.min.js') }}"></script>
     <script>
-    $('.gallery-lb').each(function() { 
-        $(this).magnificPopup({
-            delegate: 'a',
-            type: 'image',
-            gallery: {
-                enabled:true
-            },
-            mainClass: 'mfp-fade'
+        $('.gallery-lb').each(function() { 
+            $(this).magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                gallery: {
+                    enabled:true
+                },
+                mainClass: 'mfp-fade'
+            });
         });
-    });
-    function goBack() {
-        window.history.back();
-    }
+        function goBack() {
+            window.history.back();
+        }
     </script>
     <script>
         function updateFileName(input) {
@@ -82,7 +82,7 @@
             $('#errorAlert').alert('close');
         }, 5000);
     </script>
-    <script src="{{ asset('website/vendor/isotope/isotope.pkgd.min.js') }}"></>
+    <script src="{{ asset('website/vendor/isotope/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('website/vendor/sweetalert/sweetalert.min.js') }}"></script>
     <script>
     $('.js-addwish-b2').on('click', function(e){
@@ -174,5 +174,58 @@
             toggleRotation();
         });
   </script>
+  <script type="text/javascript">
+    var toHtml = (tag, value) => {
+        $(tag).html(value);
+    }
+
+    $('#provinsi').on('change', function () {
+        var id = $('#provinsi').val();
+        var url = window.location.href;
+        var urlNya = url.substring(0, url.lastIndexOf('/user'));
+
+        $.ajax({
+            type: 'GET',
+            url: urlNya + '/api/get-kota/' + id,
+            dataType: 'json',
+            success: function (data) {
+                var op = '';
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        op += `<option value="${data[i].city_id}">${data[i].city_name}</option>`;
+                    }
+                }
+                toHtml('#kota', op);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        })
+    })
+    $(document).ready(function () {
+        $('#provinsi').val("{{ old('provinsi', Auth::user()->provinsi) }}");
+        $('#provinsi').trigger('change');
+
+        setTimeout(function () {
+            $('#kota').val("{{ old('kota', Auth::user()->kota) }}");
+        }, 1500);
+    });
+</script>
+
+<script type="text/javascript">
+    function ubahPengiriman(event) {
+        var selectedService = event.target.value;
+        var subtotalProduk = parseInt($("#subtotal_produk").text().replace("Rp. ", "").replace(/\./g, ''), 10);
+        var ongkir = 0;
+        if (selectedService) {
+            ongkir = parseInt($(event.target.options[event.target.selectedIndex]).data('biaya'), 10);
+        }
+        $("#ongkir").text("Rp. " + ongkir.toLocaleString('id-ID', { useGrouping: false }));
+        var totalSubtotal = subtotalProduk + ongkir;
+        $("#subtotal").text("Rp. " + totalSubtotal.toLocaleString('id-ID', { useGrouping: false }));
+        $("input[name='pengiriman']").val(ongkir);
+        $("input[name='subtotal']").val(totalSubtotal);
+    }
+</script>
 </body>    
 @endsection

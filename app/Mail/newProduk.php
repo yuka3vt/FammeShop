@@ -14,17 +14,17 @@ class newProduk extends Mailable
     use Queueable, SerializesModels;
 
     private $nama;
-    private $image;
     private $produk;
+    private $harga;
     /**
      * Create a new message instance.
      */
-    public function __construct($nama, $image, $produk)
+    public function __construct($nama, $produk, $harga)
     {
        $this->nama = $nama;
-       $this->image = $image;
        $this->produk = $produk;
-    }
+       $this->harga = $harga;
+    } 
 
     /**
      * Get the message envelope.
@@ -47,18 +47,11 @@ class newProduk extends Mailable
     }
     public function build()
     {
-        $imagePath = $this->image === 'default' ? public_path('defaultProduk.png') : storage_path('app/public/' . $this->image);
-        $imageEmbed = $this->embed($imagePath);
-        return $this->subject('New Produk')
-                    ->view('email.newProduk')
-                    ->with([
-                        'nama' => $this->nama,
-                        'namaProduk' => $this->produk,
-                    ])
-                    ->attach($imagePath, [
-                        'as' => 'nama_file_gambar.png', 
-                        'mime' => 'image/png',
-                    ]);
+         return $this->subject('New Produk')
+            ->view('email.newProduk')
+            ->with('nama', $this->nama)
+            ->with('namaProduk', $this->produk)
+            ->with('harga', $this->harga);
     }
 
     /**

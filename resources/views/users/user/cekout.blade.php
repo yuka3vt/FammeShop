@@ -25,14 +25,14 @@
 											<select class="js-select2" name="pembayaran" required>
 												<option disabled selected value="">Pembayaran</option>
 												<option value="COD">COD</option>
-												<option value="BCA">BCA</option>
+												<option value="BCA" selected>BCA</option>
 											</select>
 											<div class="dropDownSelect2"></div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="flex-w flex-t p-t-15 p-b-80">
+							<div class="flex-w flex-t p-t-15">
 								<div class="size-208 w-full-ssm p-t-5">
 									<span class="stext-110 cl2">
 										Alamat Pengiriman
@@ -42,10 +42,46 @@
 									<div>
 										<div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
 											<select class="js-select2" name="alamat" required>
-												<option disabled selected value="">Pilih alamat pengiriman...</option>
-												<option value="{{ $dataUser->provinsi }}, {{ $dataUser->kota }},{{ $dataUser->kecamatan }}, {{ $dataUser->kode_pos }}, {{ $dataUser->detail_alamat }}">
-													{{ $dataUser->provinsi }}, {{ $dataUser->kota }},{{ $dataUser->kecamatan }}, {{ $dataUser->kode_pos }}, {{ $dataUser->detail_alamat }}
+												<option disabled value="">Pilih alamat pengiriman...</option>
+												<option selected value="{{ $alamat }}">
+													{{ $alamat }}
 												</option>
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="flex-w flex-t p-t-15 p-b-80">
+								<div class="size-208 w-full-ssm p-t-5">
+									<span class="stext-110 cl2">
+										Pengiriman
+									</span>
+								</div>
+								<div class="size-2081 p-r-18 p-r-0-sm w-full-ssm">
+									<div>
+										<div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
+											<select class="js-select2" name="kurir" required>
+												<option selected value="JNE">JNE</option>
+											</select>
+											<div class="dropDownSelect2"></div>
+										</div>
+									</div>
+								</div>
+								<div class="size-208 p-r-18 p-r-0-sm w-full-ssm">
+									<div>
+										<div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
+											<select class="js-select2" name="layanan" required onchange="ubahPengiriman(event)">
+												<option disabled selected value="">Pilih Layanan...</option>
+												@foreach ($layanan as $service)
+													@foreach ($service['costs'] as $cost)
+														@foreach ($cost['cost'] as $detail)
+															<option value="{{ $cost['description'] }}" data-biaya="{{ $detail['value'] }}">
+																{{ $cost['description'] }} - Rp. {{ number_format($detail['value'], 0, ',', '.') }}
+															</option>
+														@endforeach
+													@endforeach
+												@endforeach
 											</select>
 											<div class="dropDownSelect2"></div>
 										</div>
@@ -92,17 +128,17 @@
 										@endphp
 									@endforeach
 									<td>Subtotal Produk</td>
-									<td class="price">Rp. {{ number_format($totalSubtotal, 0, ',', '.') }}</td>
+									<td id="subtotal_produk" class="price">Rp. {{ $totalSubtotal }}</td>
 								</tr>
 								<tr>
 									<td>Subtotal Pengiriman</td>
 									<input type="text" name="pengiriman" hidden value="0">
-									<td class="price">Rp. <del>40.000</del></td>
+									<td id="ongkir" class="price">Rp. 0</td>
 								</tr>
 								<tr>
 									<td>Total Pesanan</td>
 									<input type="text" name="subtotal" hidden value="{{ $totalSubtotal }}">
-									<td class="price">Rp. {{ number_format($totalSubtotal, 0, ',', '.') }}</td>
+									<td id="subtotal" class="price">Rp. {{ $totalSubtotal }}</td>
 								</tr>
 							</table>
 									
@@ -116,4 +152,6 @@
 			</div>
 		</div>
 	</div>
+
+
 @endsection

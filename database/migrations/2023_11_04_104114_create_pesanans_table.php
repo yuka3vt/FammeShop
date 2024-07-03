@@ -20,6 +20,8 @@ return new class extends Migration
             $table->enum('pembayaran', ['COD','BCA']);
             $table->enum('status', ['Belum dibayar','Sudah dibayar']);
             $table->text('alamat');
+            $table->string('kurir');
+            $table->string('layanan');
             $table->decimal('pengiriman', 10, 0);
             $table->decimal('subtotal', 10, 0);
             $table->timestamps();

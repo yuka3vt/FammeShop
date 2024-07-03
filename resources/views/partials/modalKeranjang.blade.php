@@ -33,7 +33,7 @@
                                         Size : {{ $keranjang->ukuran }} &nbsp;&nbsp;&nbsp; Warna : {{ $keranjang->warna }}
                                     </span>
                                     <span class="header-cart-item-info">
-                                        @if ($keranjang->produk->diskon !== 0)
+                                        @if ($keranjang->produk->diskon !== null)
                                         Rp. <span class="strikethrough">
                                             {{ number_format($keranjang->produk->harga, 0, ',', '.') }}
                                         </span> &nbsp;<span>{{ number_format($keranjang->produk->hargaTotal, 0, ',', '.') }}</span>

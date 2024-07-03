@@ -39,7 +39,7 @@ class newProdukJob implements ShouldQueue
         }
         $emailUsers = User::where('level', 'pengguna')->where('akun', 'aktif')->get();
         foreach ($emailUsers as $user) {
-            $mail = new NewProduk($user->nama, $produk->image, $produk->nama);
+            $mail = new NewProduk($user->nama, $produk->nama, $produk->harga);
             Mail::to($user->email)->queue($mail);
         }
     }

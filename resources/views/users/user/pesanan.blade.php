@@ -58,7 +58,7 @@
                                         </td>
                                         <td class="column-33 p-r-20">
                                             <p class="BanyakBarangdanHarga"><span>{{ $pesananItems->Keranjang[0]->jumlah }} X</span>
-                                                @if ($pesananItems->Keranjang[0]->produk->diskon !== 0)
+                                                @if ($pesananItems->Keranjang[0]->produk->diskon !== null)
                                                 Rp. <span class="strikethrough">
                                                     {{ number_format($pesananItems->Keranjang[0]->produk->harga, 0, ',', '.') }}
                                                 </span> &nbsp;<span>{{ number_format($pesananItems->Keranjang[0]->produk->hargaTotal, 0, ',', '.') }}</span>

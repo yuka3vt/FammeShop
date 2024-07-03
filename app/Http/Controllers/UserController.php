@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Kavist\RajaOngkir\Facades\RajaOngkir;
 
 class UserController extends Controller
 {
@@ -21,22 +22,28 @@ class UserController extends Controller
         if ($username!==auth()->user()->username) {
             return redirect('/profil/'.auth()->user()->username);
         }
+        $daftarProvinsi = RajaOngkir::provinsi()->all();
         $user->created_at_formatted = Carbon::parse($user->tanggal_lahir)->format('d-m-Y');
+        if ($user->provinsi && $user->kota) {
+            $dataAlamat = RajaOngkir::kota()->dariProvinsi($user->provinsi)->find($user->kota);
+            $alamat = $dataAlamat['province'].', '.$dataAlamat['city_name'].', '. $user->kecamatan .'('.$user->kode_pos.') ,'.$user->detail_alamat;
+        } else {
+            $alamat = '-';
+        }
         return view('users.user.profil',[
             'judul' => 'Profil',
             'footer' => 'tidak',
-
             'dataKeranjang' => Keranjang::orderBy('updated_at', 'desc')
                 ->with('produk')
                 ->where('user_id', auth()->user()->id)
                 ->where('status', 'keranjang')
                 ->get(),
-
             'dataUser' => $user,
-
+            'provinsi' => $daftarProvinsi,
             'dataSuka' => Wishlist::orderBy('updated_at', 'desc')
                 ->where('user_id', auth()->user()->id)
                 ->get(),
+            'alamat' => $alamat   
         ]);
     }
     public function updateAlamat(Request $request, $username){

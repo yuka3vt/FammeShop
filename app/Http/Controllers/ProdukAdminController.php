@@ -11,13 +11,14 @@ use App\Models\Produkukuran;
 use App\Models\Produkwarna;
 use Illuminate\Http\Request;
 use DOMDocument;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class ProdukAdminController extends Controller
 {
     public function indexProduk()
-    {
+    {   
         return view('users.admin.produk.produkView', [
             'judul' => 'Produk',
             'h1' => 'Produk View',
@@ -49,6 +50,10 @@ class ProdukAdminController extends Controller
         $produk = new Produk();
         if ($request->file('image')) {
             $imagePath = $request->file('image')->store('public/produk');
+
+            $imageFullPath = storage_path("app/$imagePath");
+            
+
             $produk->image = str_replace('public/', '', $imagePath);
         }
         $dimensi = $request->dimensi;
@@ -99,6 +104,7 @@ class ProdukAdminController extends Controller
         if ($request->file('image')) {
             Storage::delete('public/' . $produk->image);
             $imagePath = $request->file('image')->store('public/produk');
+            $imageFullPath = storage_path("app/$imagePath");
             $produk->image = str_replace('public/', '', $imagePath);
         }
         $dimensi = $request->dimensi;
@@ -308,17 +314,25 @@ class ProdukAdminController extends Controller
         return back()->with('gagal','Warna Ukuran gagal di hapus');
     }
     public function diskon(Request $request){
-        $produk = Produk::find($request->idProduk);
-        $diskon =$request->diskon;
-        $harga = $produk->harga;
-        $hargaTotal = $harga -($harga*$diskon/100);
-        $produk->diskon = $diskon;
-        $produk->hargaTotal = $hargaTotal;
-        $produk->save();
-        if ($diskon!==0) {
+        if ($request->diskon==0) {
+            $produk = Produk::find($request->idProduk);
+            $produk->diskon = null;
+            $produk->hargaTotal = $produk->harga;
+            $produk->save();
+        }else{
+            $produk = Produk::find($request->idProduk);
+            $diskon =$request->diskon;
+            $harga = $produk->harga;
+            $hargaTotal = $harga -($harga*$diskon/100);
+            $produk->diskon = $diskon;
+            $produk->hargaTotal = $hargaTotal;
+            $produk->save();
             dispatch(new diskonInfoJob($diskon, $produk->nama, $harga, $hargaTotal));
-            return redirect('/admin/produk-view')->with('sukses', 'Diskon berhasil ditambahkan.');
         }
-        return redirect('/admin/produk-view');
+        return redirect('/admin/produk-view')->with('sukses', 'Diskon berhasil diubah.');
+    }
+    public function linkStorage(){
+        Artisan::call('storage:link');
+        return back()->with('sukses', 'Link berhasil dilakukan');
     }
 }

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
+use Kavist\RajaOngkir\Facades\RajaOngkir;
 
 class PesananController extends Controller
 {
@@ -85,11 +86,31 @@ class PesananController extends Controller
             ->where('status', 'keranjang')
             ->whereIn('id', $keranjangIds)
             ->get();
+
+        $totalBerat = $dataKeranjang->reduce(function ($carry, $item) {
+            if ($item->produk && isset($item->produk->berat)) {
+                $carry += $item->produk->berat;
+            }
+            return $carry;
+        }, 0);
+        if ($totalBerat==0) {
+            $totalBerat=1;
+        }
+
+        $dataAlamat = RajaOngkir::kota()->dariProvinsi($user->provinsi)->find($user->kota);
+        $alamat = $dataAlamat['province'].', '.$dataAlamat['city_name'].', '. $user->kecamatan .'('.$user->kode_pos.') ,'.$user->detail_alamat;
+        $data = RajaOngkir::ongkosKirim([
+            'origin'=> 365,
+            'destination'=> $user->kota,
+            'weight'=> $totalBerat,
+            'courier'=> 'jne'])->get();
         return view('users.user.cekout',[
             'judul' => 'Proses Pesanan',
             'footer' => 'tidak',
             'dataUser' => $user,
+            'layanan' => $data,
             'pesananProduk' => $dataKeranjang,
+            'alamat' => $alamat
         ]);
     }
     public function cekOutPesanan(Request $request){
@@ -103,6 +124,8 @@ class PesananController extends Controller
             'alamat' => $request->input('alamat'),
             'pengiriman' => $request->input('pengiriman'),
             'subtotal' => $request->input('subtotal'),
+            'kurir' => $request->input('kurir'),
+            'layanan' => $request->input('layanan'),
             'no_pesanan' => $no_pesan,
         ]);
         $pesanan->keranjang()->attach($keranjangIds);

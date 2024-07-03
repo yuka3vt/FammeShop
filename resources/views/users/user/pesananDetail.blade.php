@@ -23,7 +23,7 @@
             <table class="m-l-15 m-b-30">
                 <tbody>
                     <td class="text-14-bold p-r-10 p-b-5">Metode</td>
-                    <td class="text-14 p-b-5">: {{ $detailPesanan->pembayaran }} <SMall>(7925488453 - Yuka Wardana)</SMall></td>
+                    <td class="text-14 p-b-5">: {{ $detailPesanan->pembayaran }} <SMall>(7925488453 - Lina Yuliana)</SMall></td>
                 </tbody>
                 <tbody>
                     <td class="text-14-bold p-r-10 p-b-5">No. Pesanan</td>
@@ -40,6 +40,10 @@
                         <button class="btn btn-primary" data-toggle="modal" data-target="#bayar">Upload</button>
                         @endif
                     </td>
+                </tbody>
+                <tbody>
+                    <td class="text-14-bold p-b-5 p-r-10">Kurir</td>
+                    <td class="text-14 p-b-15">: {{ $detailPesanan->kurir }} - {{ $detailPesanan->layanan }}</td>
                 </tbody>
                 <tbody>
                     <td class="text-14-bold p-r-10"><i class="fa fa-map-marker " aria-hidden="true"></i>&nbsp; Alamat
@@ -116,7 +120,7 @@
                                 <td class="column-11">
                                 </td>
                                 <td class="column-33 p-r-20">
-                                    Rp. {{ number_format($detailPesanan->subtotal, 0, ',', '.') }}
+                                    Rp. {{ number_format($detailPesanan->subtotal-$detailPesanan->pengiriman, 0, ',', '.') }}
                                 </td>
                             </tr>
                             <tr>
@@ -126,7 +130,7 @@
                                 <td class="column-11">
                                 </td>
                                 <td class="column-33 p-r-20">
-                                    Rp. 0
+                                    Rp. {{ number_format($detailPesanan->pengiriman, 0, ',', '.') }}
                                 </td>
                             </tr>
                             <tr class="row-tr">
